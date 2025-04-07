@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  servlet:
+    context_path: /take
+
+
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/trainning_grade"
+    username: root
+    password: 0911600379
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  signerKey: "J/Rxe1eygdcZAYTk3DN7Z0BzgWIq+Qmh2wugOGjR7Ev8NV4tMMpRgfPR30DZqCws"
