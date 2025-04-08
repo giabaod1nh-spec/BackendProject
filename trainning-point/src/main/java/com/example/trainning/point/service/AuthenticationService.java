@@ -13,12 +13,10 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,9 +32,9 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE , makeFinal = true)
 public class AuthenticationService {
     UserRepository userRepository;
-    @NonFinal //Ko bi danh dau tao constructor
-    @Value("${jwt.signerKey}")
-    protected String SIGNER_KEY;
+    @NonFinal //Đánh đấu để ko bị inject vào constructor
+    private static final String SIGNER_KEY =
+            "F82LVYKeAtDgteFr0CdUy4EIFvzhIGTqf3nSVGXu9Pw5f+jLWHU32aSqfXHfaOVm" ;
 
     public IntrospectResponse introspect(IntrospectRequest request)
             throws ParseException, JOSEException {
@@ -58,10 +56,10 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         boolean authenticated =  passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -88,7 +86,6 @@ public class AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("customClaim" , "Custom")
                 .build();
         //Sau khi du claimset tao payload
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
