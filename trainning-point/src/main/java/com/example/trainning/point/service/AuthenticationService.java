@@ -110,8 +110,8 @@ public class AuthenticationService {
         //Scope la 1 list dung Stringjoiner
         StringJoiner stringJoiner = new StringJoiner(" ");
         //Convention cach nhau bang 1 dau cach
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(stringJoiner::add);
+      //  if (!CollectionUtils.isEmpty(user.getRoles()))
+        //    user.getRoles().forEach(stringJoiner::add);
 
 
         return stringJoiner.toString();

@@ -3,6 +3,7 @@ package com.example.trainning.point.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
+//phân quyền trên method , dat annotation tren method
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/user" ,
@@ -34,13 +37,14 @@ public class SecurityConfig {
         //Config API nay co the duoc truy cap public
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")//CHI ADMIN MOI DUOC TRUY CAP ENDPOINT NAY
+                      //  .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")//CHI ADMIN MOI DUOC TRUY CAP ENDPOINT NAY
                        //.hasRole("ADMIN") tim trong token co ADMIN la pass
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())  //Khi authen failed thi dieu huong user ?
         );
         //decoder la 1 interface de decode token , need a method tu define
 

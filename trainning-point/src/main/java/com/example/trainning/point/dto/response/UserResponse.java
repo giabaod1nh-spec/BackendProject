@@ -1,5 +1,6 @@
 package com.example.trainning.point.dto.response;
 
+import com.example.trainning.point.entity.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,5 +20,5 @@ public class UserResponse {
     String email;
     String phone;
     boolean active;
-    Set<String> roles;
+    Set<Role> roles;
 }
