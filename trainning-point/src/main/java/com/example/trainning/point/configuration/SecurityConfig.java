@@ -68,7 +68,8 @@ public class SecurityConfig {
     JwtAuthenticationConverter jwtAuthenticationConverter(){
         //Customize authority mapper cho converter
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+        //Vì đã manage r nên ko cần thêm prefix ở đây trong service
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         //Set customize converter
@@ -79,9 +80,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder (){
+    public PasswordEncoder passwordEncoder (){
+
         return new BCryptPasswordEncoder(10);
     }
-
 
 }

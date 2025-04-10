@@ -6,6 +6,7 @@ import com.example.trainning.point.enums.Role;
 import com.example.trainning.point.exception.AppException;
 import com.example.trainning.point.exception.ErrorCode;
 import com.example.trainning.point.mapper.UserMapper;
+import com.example.trainning.point.repository.RoleRepository;
 import com.example.trainning.point.repository.UserRepository;
 import com.example.trainning.point.dto.request.UserCreationRequest;
 import com.example.trainning.point.entity.User;
@@ -30,6 +31,8 @@ import java.util.List;
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public UserResponse createUser(UserCreationRequest request){
         User user = userMapper.toUser(request);
@@ -57,10 +60,16 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() ->  new RuntimeException("User not found"));
 
         userMapper.updateUser(user , request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize(("hasAuthority('UPDATE_DATA')"))
     //Spring create 1 proxy to check hasRole... -> pass
     public List<UserResponse> getUsers(){
         log.info("In method get Users");
