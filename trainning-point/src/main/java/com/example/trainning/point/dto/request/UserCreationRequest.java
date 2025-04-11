@@ -1,5 +1,6 @@
 package com.example.trainning.point.dto.request;
 
+import com.example.trainning.point.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,8 @@ public class UserCreationRequest {
     @Size(min = 6 , message = "INVALID_PASSWORD")
     String password;
     String fullName;
+    @DobConstraint(min = 2 , message = "INVALID_DOB")
     LocalDate dob;
     String phone;
-    boolean active;
+    Boolean active = true;
 }

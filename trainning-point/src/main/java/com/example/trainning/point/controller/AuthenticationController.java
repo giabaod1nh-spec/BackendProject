@@ -1,8 +1,6 @@
 package com.example.trainning.point.controller;
 
-import com.example.trainning.point.dto.request.ApiResponse;
-import com.example.trainning.point.dto.request.AuthenticationRequest;
-import com.example.trainning.point.dto.request.IntrospectRequest;
+import com.example.trainning.point.dto.request.*;
 import com.example.trainning.point.dto.response.AuthenticationResponse;
 import com.example.trainning.point.dto.response.IntrospectResponse;
 import com.example.trainning.point.service.AuthenticationService;
@@ -41,5 +39,21 @@ public class AuthenticationController {
                 .build();
     }
 
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+         authenticationService.logout(request);
+       return ApiResponse.<Void>builder()
+                .build();
+    }
 
 }

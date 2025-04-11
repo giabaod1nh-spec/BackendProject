@@ -22,7 +22,7 @@ public class User {
     String fullName;
     LocalDate dob;
     String phone;
-    boolean active = true;
+    Boolean active ;
 
     @ManyToMany
     Set<Role> roles;
