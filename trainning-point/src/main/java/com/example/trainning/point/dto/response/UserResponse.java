@@ -19,6 +19,6 @@ public class UserResponse {
     LocalDate dob;
     String email;
     String phone;
-    boolean active;
+    Boolean active;
     Set<RoleResponse> roles;
 }

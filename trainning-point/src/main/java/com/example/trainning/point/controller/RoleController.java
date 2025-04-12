@@ -27,7 +27,6 @@ public class RoleController {
                 .build();
     }
 
-
     @GetMapping
     ApiResponse<List<RoleResponse>> getAll(){
         return ApiResponse.<List<RoleResponse>>builder()

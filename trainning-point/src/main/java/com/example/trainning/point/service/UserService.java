@@ -68,8 +68,8 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize(("hasAuthority('UPDATE_DATA')"))
+    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize(("hasAuthority('UPDATE_DATA')"))
     //Spring create 1 proxy to check hasRole... -> pass
     public List<UserResponse> getUsers(){
         log.info("In method get Users");

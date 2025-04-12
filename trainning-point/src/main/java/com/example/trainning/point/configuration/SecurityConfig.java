@@ -26,7 +26,6 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/user" ,
             "/auth/token" , "/auth/introspect"
-
     };
 
     //@NonFinal //Đánh đấu để ko bị inject vào constructor
@@ -85,6 +84,5 @@ public class SecurityConfig {
 
         return new BCryptPasswordEncoder(10);
     }
-
 
 }
