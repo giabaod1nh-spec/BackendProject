@@ -100,12 +100,7 @@ public class AuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        System.out.println("== LOGIN DEBUG ==");
-        System.out.println("Email: " + request.getEmail());
-        System.out.println("Password (raw): " + request.getPassword());
-        System.out.println("Password (encoded): " + user.getPassword());
 
-        System.out.println("Password match? " + authenticated);
 
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHETICATED);
