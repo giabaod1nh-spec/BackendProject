@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +20,6 @@ public class Instructor {
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;
-
-    String fullName;
-    LocalDate dob;
-    String phone;
-
-    Gender gender;
 
     @Builder.Default
     boolean isActive = true ;

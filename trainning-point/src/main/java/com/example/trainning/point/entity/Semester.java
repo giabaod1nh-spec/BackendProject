@@ -1,10 +1,11 @@
 package com.example.trainning.point.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -12,15 +13,13 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Student {
+public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long studentId ;
+    Long semesterId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    String semesterName;
 
-    @Builder.Default
-    Boolean isActive = true ;
+    String schoolYear;
+
 }

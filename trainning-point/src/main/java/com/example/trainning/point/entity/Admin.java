@@ -21,8 +21,6 @@ public class Admin {
     @JoinColumn(name = "user_id")
     User user;
 
-    Gender gender;
-
     @Builder.Default
     boolean isActive = true ;
 }

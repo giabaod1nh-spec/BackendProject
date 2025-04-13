@@ -4,23 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Student {
+public class ClassManager {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long studentId ;
+    Long classManagerId;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @JoinColumn(name = "student_id")
+    Student student;
 
-    @Builder.Default
-    Boolean isActive = true ;
+    @ManyToOne
+    @JoinColumn(name = "semester_id")
+    Semester semester;
 }
