@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "active" , ignore = true)
+    //@Mapping(target = "active" , ignore = true)
     User toUser(UserCreationRequest request);
     UserResponse toUserResponse(User user);
 

@@ -22,9 +22,13 @@ public class User {
     String fullName;
     LocalDate dob;
     String phone;
-    Boolean active ;
+    Gender gender;
 
     @ManyToMany
     Set<Role> roles;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
+    Admin admin;
+
 
 }

@@ -36,7 +36,7 @@ public class ApplicationInitConfig {
             User user = User.builder()
                     .email("admin")
                     .password(passwordEncoder.encode("admin")) //can them passwordencode -> tao 1 bean rieng de su dung
-                    .active(true)
+                    //.active(true)
                    // .roles(roles)
                     .build();
 
