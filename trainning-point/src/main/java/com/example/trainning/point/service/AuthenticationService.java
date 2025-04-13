@@ -89,15 +89,25 @@ public class AuthenticationService {
            //     .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        boolean authenticated =  passwordEncoder.matches(request.getPassword(), user.getPassword());
+        // ➕ In log sau khi tìm được user
+        System.out.println("Tìm được user: " + user.getEmail());
 
-        if(!authenticated)
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        System.out.println("== LOGIN DEBUG ==");
+        System.out.println("Email: " + request.getEmail());
+        System.out.println("Password (raw): " + request.getPassword());
+        System.out.println("Password (encoded): " + user.getPassword());
+
+        System.out.println("Password match? " + authenticated);
+
+        if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHETICATED);
 
         var token = generateToken(user);
@@ -107,6 +117,7 @@ public class AuthenticationService {
                 .authenticated(true)
                 .build();
     }
+
 
     //Create method logout
 

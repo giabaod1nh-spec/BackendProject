@@ -25,7 +25,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/user" ,
-            "/auth/token" , "/auth/introspect"
+            "/auth/token" , "/auth/introspect",
+            "/encode"
     };
 
     //@NonFinal //Đánh đấu để ko bị inject vào constructor
@@ -36,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Config API nay co the duoc truy cap public
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                       //  .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")//CHI ADMIN MOI DUOC TRUY CAP ENDPOINT NAY
                        //.hasRole("ADMIN") tim trong token co ADMIN la pass
                         .anyRequest().authenticated());
