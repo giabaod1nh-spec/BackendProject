@@ -1,5 +1,6 @@
 package com.example.trainning.point.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,15 @@ public class Evaluate {
 
     private Integer totalScore;
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "semester_id")
+    private Semester semester;
+
     @OneToMany(mappedBy = "evaluate", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CriterionPoint> criterionPoints = new ArrayList<>();
 }
