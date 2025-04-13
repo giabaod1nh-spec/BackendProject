@@ -14,9 +14,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     String password;
-    String fullName;
-    @DobConstraint(min = 2 , message = "INVALID_DOB")
-    LocalDate dob;
-    String phone;
+   // String fullName;
+   // @DobConstraint(min = 2 , message = "INVALID_DOB")
+   // LocalDate dob;
+   // String phone;
     List<String> roles;
 }

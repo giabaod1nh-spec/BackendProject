@@ -19,12 +19,15 @@ public class User {
     String userId;
     String email;
     String password;
-    String fullName;
-    LocalDate dob;
-    String phone;
-    Boolean active ;
+    //String fullName;
+    //LocalDate dob;
+    //String phone;
+    //Boolean active ;
 
     @ManyToMany
     Set<Role> roles;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
+    Admin admin;
 
 }
