@@ -2,16 +2,19 @@ package com.example.trainning.point.exception;
 
 import com.example.trainning.point.dto.request.ApiResponse;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @ControllerAdvice
 @Slf4j
@@ -59,7 +62,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception){
-        String enumKey = exception.getFieldError().getDefaultMessage();
+        String enumKey = Optional.ofNullable(exception.getFieldError())
+                .map(FieldError::getDefaultMessage)
+                .orElse("INVALID_KEY");
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String , Object> attributes = null;
@@ -99,4 +104,15 @@ public class GlobalExceptionHandler {
 
         return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
     }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse> handleConstraintViolation(ConstraintViolationException ex) {
+        return ResponseEntity.badRequest().body(
+                ApiResponse.builder()
+                        .code(ErrorCode.INVALID_KEY.getCode())
+                        .message(ex.getMessage())
+                        .build()
+        );
+    }
+
+
 }

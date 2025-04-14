@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Entity
 @Getter
 @Setter
-@Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class CriterionPoint {
 
     @Id
@@ -26,6 +27,7 @@ public class CriterionPoint {
     @ManyToOne
     @JoinColumn(name = "evaluate_id")
     @JsonBackReference
+    @ToString.Exclude
     private Evaluate evaluate;
 
     @ManyToOne
@@ -34,5 +36,7 @@ public class CriterionPoint {
 
     @OneToMany(mappedBy = "criterionPoint", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<DetailPoint> detailPoints = new ArrayList<>();
 }
+

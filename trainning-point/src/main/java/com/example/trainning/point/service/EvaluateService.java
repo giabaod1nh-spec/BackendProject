@@ -23,8 +23,6 @@ public class EvaluateService {
 
     public Evaluate createEvaluate(EvaluateRequest request) {
         try {
-            System.out.println("🟢 Start creating Evaluate");
-
             Student student = studentRepository.findById(request.getStudentId())
                     .orElseThrow(() -> new RuntimeException("❌ Student not found"));
 
@@ -41,22 +39,23 @@ public class EvaluateService {
                 Criterion criterion = criterionRepository.findById(cpReq.getCriterionId())
                         .orElseThrow(() -> new RuntimeException("❌ Criterion not found"));
 
+                int criterionScore = validateAndConvertScore(cpReq.getScore());
+
                 CriterionPoint criterionPoint = new CriterionPoint();
-                System.out.println("🎯 Check evaluate: " + evaluate);
-                System.out.println("🎯 Check student: " + student);
-                System.out.println("🎯 Check semester: " + semester);
                 criterionPoint.setEvaluate(evaluate);
                 criterionPoint.setCriterion(criterion);
-                criterionPoint.setScore((int) cpReq.getScore());
+                criterionPoint.setScore(criterionScore);
 
                 List<DetailPoint> detailPoints = cpReq.getDetailPoints().stream().map(dpReq -> {
                     Detail detail = detailRepository.findById(dpReq.getDetailId())
                             .orElseThrow(() -> new RuntimeException("❌ Detail not found"));
 
+                    int detailScore = validateAndConvertScore(dpReq.getScore());
+
                     DetailPoint detailPoint = new DetailPoint();
                     detailPoint.setCriterionPoint(criterionPoint);
                     detailPoint.setDetail(detail);
-                    detailPoint.setScore((int) dpReq.getScore());
+                    detailPoint.setScore(detailScore);
 
                     return detailPoint;
                 }).collect(Collectors.toList());
@@ -68,14 +67,25 @@ public class EvaluateService {
 
             evaluate.setCriterionPoints(criterionPoints);
             evaluate.setTotalScore(totalScore.get());
-
-            System.out.println("✅ Evaluate created successfully");
             return evaluateRepository.save(evaluate);
+
         } catch (Exception e) {
-            System.err.println("🔥 Error while creating Evaluate:");
             e.printStackTrace();
             throw new RuntimeException("Error while creating Evaluate: " + e.getMessage());
         }
+    }
+
+    private int validateAndConvertScore(Integer score) {
+        if (score == null) {
+            throw new RuntimeException("⚠️ Điểm không được null");
+        }
+        if (score % 1 != 0) {
+            throw new RuntimeException("⚠️ Điểm phải là số nguyên");
+        }
+        if (score < 0) {
+            throw new RuntimeException("⚠️ Điểm không được âm");
+        }
+        return score;
     }
 
     public EvaluateResponse getEvaluateById(Long evaluateId) {
@@ -92,27 +102,75 @@ public class EvaluateService {
     }
 
     private EvaluateResponse mapToEvaluateResponse(Evaluate evaluate) {
-        List<EvaluateResponse.CriterionPointDto> criterionDtos = evaluate.getCriterionPoints().stream()
-                .map(cp -> EvaluateResponse.CriterionPointDto.builder()
-                        .criterionId(cp.getCriterion().getId())
-                        .criterionName(cp.getCriterion().getName())
-                        .score(cp.getScore())
-                        .detailPoints(cp.getDetailPoints().stream()
-                                .map(dp -> EvaluateResponse.CriterionPointDto.DetailPointDto.builder()
-                                        .detailId(dp.getDetail().getId())
-                                        .detailName(dp.getDetail().getName())
-                                        .score(dp.getScore())
-                                        .build())
-                                .collect(Collectors.toList()))
-                        .build())
-                .collect(Collectors.toList());
+        try {
+            List<EvaluateResponse.CriterionPointDto> criterionDtos = evaluate.getCriterionPoints().stream()
+                    .filter(cp -> cp.getCriterion() != null)
+                    .map(cp -> EvaluateResponse.CriterionPointDto.builder()
+                            .criterionId(cp.getCriterion().getId())
+                            .criterionName(cp.getCriterion().getName())
+                            .score(cp.getScore())
+                            .detailPoints(cp.getDetailPoints().stream()
+                                    .filter(dp -> dp.getDetail() != null)
+                                    .map(dp -> EvaluateResponse.CriterionPointDto.DetailPointDto.builder()
+                                            .detailId(dp.getDetail().getId())
+                                            .detailName(dp.getDetail().getName())
+                                            .score(dp.getScore())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                            .build())
+                    .collect(Collectors.toList());
 
-        return EvaluateResponse.builder()
-                .evaluateId(evaluate.getId())
-                .studentId(evaluate.getStudent().getStudentId())
-                .semesterId(evaluate.getSemester().getSemesterId())
-                .totalScore(evaluate.getTotalScore())
-                .criterionPoints(criterionDtos)
-                .build();
+            return EvaluateResponse.builder()
+                    .evaluateId(evaluate.getId())
+                    .studentId(evaluate.getStudent() != null ? evaluate.getStudent().getStudentId() : null)
+                    .semesterId(evaluate.getSemester() != null ? evaluate.getSemester().getSemesterId() : null)
+                    .totalScore(evaluate.getTotalScore())
+                    .criterionPoints(criterionDtos)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("🔥 Lỗi khi mapping EvaluateResponse: " + e.getMessage());
+        }
+    }
+
+    public List<Evaluate> getAllEvaluates() {
+        return evaluateRepository.findAll();
+    }
+
+    public Evaluate recalculateEvaluate(Evaluate evaluate) {
+        AtomicInteger totalScore = new AtomicInteger(0);
+
+        for (CriterionPoint cp : evaluate.getCriterionPoints()) {
+            cp.setEvaluate(evaluate);
+
+            for (DetailPoint dp : cp.getDetailPoints()) {
+                dp.setCriterionPoint(cp);
+            }
+
+            totalScore.addAndGet(cp.getScore());
+        }
+
+        evaluate.setTotalScore(totalScore.get());
+        return evaluateRepository.save(evaluate);
+    }
+
+    public Evaluate updateEvaluate(Long id, Evaluate updated) {
+        Evaluate existing = evaluateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("❌ Evaluate not found with id = " + id));
+
+        existing.setCriterionPoints(updated.getCriterionPoints());
+        return recalculateEvaluate(existing);
+    }
+
+    public void deleteEvaluate(Long id) {
+        Evaluate evaluate = evaluateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evaluate not found"));
+        evaluateRepository.delete(evaluate);
+    }
+
+    public Evaluate findById(Long id) {
+        return evaluateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Evaluate với id: " + id));
     }
 }

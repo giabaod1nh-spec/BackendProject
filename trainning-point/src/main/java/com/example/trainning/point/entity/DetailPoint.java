@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @Getter
 @Setter
-@Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class DetailPoint {
 
     @Id
@@ -21,6 +22,7 @@ public class DetailPoint {
     @ManyToOne
     @JoinColumn(name = "criterion_point_id")
     @JsonBackReference
+    @ToString.Exclude
     private CriterionPoint criterionPoint;
 
     @ManyToOne
