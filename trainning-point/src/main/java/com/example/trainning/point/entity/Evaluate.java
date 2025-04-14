@@ -24,7 +24,7 @@ public class Evaluate {
     Student student;
 
     @ManyToOne
-    @JoinColumn(name = "semester_id", nullable = false)
+    @JoinColumn(name = "semester_id")
      Semester semester;
 
      Rating rating;

@@ -11,9 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CriterionResponse {
-    Long criterionId;
+public class CriterionPointResponse {
+    Long criterionPointId;
     String description ;
     Integer maxPoint;
-    Set<CriterionPoint>  criterionPoints;
 }

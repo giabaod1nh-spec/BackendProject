@@ -2,21 +2,12 @@ package com.example.trainning.point.service;
 
 import com.example.trainning.point.dto.request.CriterionCreationRequest;
 import com.example.trainning.point.dto.request.CriterionUpdateRequest;
-import com.example.trainning.point.dto.request.InstructorCreationRequest;
-import com.example.trainning.point.dto.request.InstructorUpdateRequest;
 import com.example.trainning.point.dto.response.CriterionResponse;
-import com.example.trainning.point.dto.response.InstructorResponse;
 import com.example.trainning.point.entity.Criterion;
-import com.example.trainning.point.entity.Instructor;
-import com.example.trainning.point.entity.User;
 import com.example.trainning.point.exception.AppException;
 import com.example.trainning.point.exception.ErrorCode;
 import com.example.trainning.point.mapper.CriterionMapper;
-import com.example.trainning.point.mapper.InstructorMapper;
-import com.example.trainning.point.repository.CriterionRepository;
-import com.example.trainning.point.repository.InstructorRepository;
-import com.example.trainning.point.repository.RoleRepository;
-import com.example.trainning.point.repository.UserRepository;
+import com.example.trainning.point.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +24,7 @@ import java.util.List;
 public class CriterionService {
     CriterionRepository criterionRepository;
     CriterionMapper criterionMapper;
+    CriterionPointRepository criterionPointRepository;
 
     public CriterionResponse createCriterion(CriterionCreationRequest request) {
         Criterion criterion = criterionMapper.toCriterion(request);
@@ -58,6 +50,9 @@ public class CriterionService {
     public CriterionResponse updateCriterion(@PathVariable Long criterionId , CriterionUpdateRequest request){
         Criterion criterion = criterionRepository.findByCriterionId(criterionId).orElseThrow(() -> new AppException(ErrorCode.CRITERION_NOT_EXISTED));
         criterionMapper.updateCriterion(criterion , request);
+
+        var criterionPoints = criterionPointRepository.findByCriterionPointId(criterionId);
+        criterion.setCriterionPoints(criterionPoints);
 
         return criterionMapper.toCriterionResponse(criterionRepository.save(criterion));
     }

@@ -1,5 +1,6 @@
 package com.example.trainning.point.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,25 +14,26 @@ import lombok.experimental.FieldDefaults;
 public class CriterionPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer criterionPointId;
+    Long criterionPointId;
 
     @ManyToOne
-    @JoinColumn(name = "evaluate_id", nullable = false)
+    @JoinColumn(name = "evaluate_id")
     Evaluate evaluate;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criterion_id")
+    @JsonBackReference
     Criterion criterion;
 
     @Column(name = "student_total_point")
-    private Integer studentPoint = 0;
+    Integer studentPoint = 0;
 
     @Column(name = "bcs_total_point")
-    private Integer bcsPoint = 0;
+    Integer bcsPoint = 0;
 
     @Column(name = "instructor_total_point")
-    private Integer instructorPoint = 0;
+    Integer instructorPoint = 0;
 
     String description;
-
+    Integer maxPoint;
 }

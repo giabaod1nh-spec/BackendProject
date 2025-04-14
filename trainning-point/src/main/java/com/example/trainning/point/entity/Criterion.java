@@ -1,5 +1,6 @@
 package com.example.trainning.point.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +24,8 @@ public class Criterion {
      String description ;
      Integer maxPoint;
 
-     @OneToOne
-     CriterionPoint criterionPoint;
+     @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @JsonBackReference
+     Set<CriterionPoint> criterionPoints;
 }
 
