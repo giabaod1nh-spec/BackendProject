@@ -13,7 +13,11 @@ public enum ErrorCode {
     INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     UNAUTHETICATED(1006, "Unauthenticated" , HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007 , "You do not have permission", HttpStatus.FORBIDDEN),
-    INVALID_DOB(1008, "Your age must be atleast {min} " , HttpStatus.BAD_REQUEST)
+    INVALID_DOB(1008, "Your age must be atleast {min} " , HttpStatus.BAD_REQUEST),
+    OPERATION_NOT_ALLOWED(1009 , "User already a student" , HttpStatus.BAD_REQUEST),
+    STUDENT_NOT_FOUND(1010, "Student not found", HttpStatus.NOT_FOUND),
+    STUDENT_EXISTED(1011, "Student code already exists", HttpStatus.BAD_REQUEST),
+    STUDENT_CODE_ALREADY_EXISTS(1012, "Student code already exists", HttpStatus.BAD_REQUEST)
 
 
 

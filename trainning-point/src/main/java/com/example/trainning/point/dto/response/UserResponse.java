@@ -15,10 +15,5 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     String userId;
-    String fullName;
-    LocalDate dob;
-    String email;
-    String phone;
-    Boolean active;
     Set<RoleResponse> roles;
 }

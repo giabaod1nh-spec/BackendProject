@@ -16,6 +16,11 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long studentId ;
+    String className;
+    String fullName;
+    LocalDate dob;
+    Gender gender;
+    String phone;
 
     @OneToOne
     @JoinColumn(name = "user_id")

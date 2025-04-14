@@ -1,6 +1,6 @@
-package com.example.trainning.point.entity;
+package com.example.trainning.point.dto.response;
 
-import jakarta.persistence.*;
+import com.example.trainning.point.entity.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,21 +11,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Instructor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class InstructorResponse {
     Long instructorId;
     String className;
     String fullName;
     LocalDate dob;
     Gender gender;
     String phone;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @Builder.Default
-    Boolean isActive = true ;
+    Boolean isActive;
 }

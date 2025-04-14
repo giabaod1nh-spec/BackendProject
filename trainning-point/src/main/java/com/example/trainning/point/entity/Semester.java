@@ -18,6 +18,8 @@ public class Semester {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long semesterId;
 
+    Integer semester;
+
     String semesterName;
 
     String schoolYear;
