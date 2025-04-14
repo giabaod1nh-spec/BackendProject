@@ -17,8 +17,9 @@ public enum ErrorCode {
     OPERATION_NOT_ALLOWED(1009 , "User already a student" , HttpStatus.BAD_REQUEST),
     STUDENT_NOT_FOUND(1010, "Student not found", HttpStatus.NOT_FOUND),
     STUDENT_EXISTED(1011, "Student code already exists", HttpStatus.BAD_REQUEST),
-    STUDENT_CODE_ALREADY_EXISTS(1012, "Student code already exists", HttpStatus.BAD_REQUEST)
-
+    STUDENT_CODE_ALREADY_EXISTS(1012, "Student code already exists", HttpStatus.BAD_REQUEST),
+    CRITERION_EXISTED(1013 , "Criterion already existed" , HttpStatus.BAD_REQUEST),
+    CRITERION_NOT_EXISTED(1014, "Criterion not found" , HttpStatus.NOT_FOUND)
 
 
     ;
